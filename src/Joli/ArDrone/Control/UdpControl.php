@@ -24,6 +24,10 @@ class UdpControl extends EventEmitter
      */
     private $ip;
 
+    /**
+     * UdpControl constructor.
+     * @param $loop
+     */
     public function __construct($loop)
     {
         $this->loop = $loop;
@@ -57,9 +61,13 @@ class UdpControl extends EventEmitter
             for ($j = 0; $j < 5; ++$j) {
                 $cmds = [];
 
-                array_push($cmds,
-                    $commandCreator->createConfigCommand('general:navdata_demo',
-                        'TRUE'));
+                array_push(
+                    $cmds,
+                    $commandCreator->createConfigCommand(
+                        'general:navdata_demo',
+                        'TRUE'
+                    )
+                );
                 array_push($cmds, $commandCreator->createPcmdCommand($pcmd));
                 array_push($cmds, $commandCreator->createRefCommand($ref));
 
@@ -70,103 +78,135 @@ class UdpControl extends EventEmitter
 
             // According to tests, a satisfying control of the AR.Drone 2.0 is reached
             // by sending the AT-commands every 30 ms for smooth drone movements.
-            $loop->addPeriodicTimer(0.03,
+            $loop->addPeriodicTimer(
+                0.03,
                 function () use ($client, $commandCreator, &$ref, &$pcmd, &$anim) {
-                $cmds = [];
+                    $cmds = [];
 
-                array_push($cmds, $commandCreator->createRefCommand($ref));
-                array_push($cmds, $commandCreator->createPcmdCommand($pcmd));
+                    array_push($cmds, $commandCreator->createRefCommand($ref));
+                    array_push($cmds, $commandCreator->createPcmdCommand($pcmd));
 
-                if (count($anim) > 0) {
-                    for ($i = 0; $i <= 10; ++$i) {
-                        foreach ($anim as $name => $duration) {
-                            array_push($cmds,
-                                $commandCreator->createConfigCommand($name,
-                                    $duration));
+                    if (count($anim) > 0) {
+                        for ($i = 0; $i <= 10; ++$i) {
+                            foreach ($anim as $name => $duration) {
+                                array_push(
+                                $cmds,
+                                $commandCreator->createConfigCommand(
+                                    $name,
+                                    $duration
+                                )
+                            );
+                            }
                         }
+
+                        $anim = [];
                     }
 
-                    $anim = [];
+                    $cmds = implode('', $cmds);
+                    $client->send($cmds);
                 }
+            );
 
-                $cmds = implode('', $cmds);
-                $client->send($cmds);
-            });
-
-            $udpControl->on('land',
+            $udpControl->on(
+                'land',
                 function () use (&$ref, &$pcmd) {
-                $pcmd = [];
-                $ref['fly'] = false;
-            });
+                    $pcmd = [];
+                    $ref['fly'] = false;
+                }
+            );
 
-            $udpControl->on('ftrim',
+            $udpControl->on(
+                'ftrim',
                 function () use (&$client, &$commandCreator) {
-                $client->send($commandCreator->createFtrimCommand());
-            });
+                    $client->send($commandCreator->createFtrimCommand());
+                }
+            );
 
-            $udpControl->on('takeoff',
+            $udpControl->on(
+                'takeoff',
                 function () use (&$ref, &$pcmd) {
-                $pcmd = [];
-                $ref['fly'] = true;
-            });
+                    $pcmd = [];
+                    $ref['fly'] = true;
+                }
+            );
 
-            $udpControl->on('clockwise',
+            $udpControl->on(
+                'clockwise',
                 function ($speed = 0.5) use (&$pcmd) {
-                $pcmd['clockwise'] = $speed;
-                unset($pcmd['counterClockwise']);
-            });
+                    $pcmd['clockwise'] = $speed;
+                    unset($pcmd['counterClockwise']);
+                }
+            );
 
-            $udpControl->on('counterClockwise',
+            $udpControl->on(
+                'counterClockwise',
                 function ($speed = 0.5) use (&$pcmd) {
-                $pcmd['counterClockwise'] = $speed;
-                unset($pcmd['clockwise']);
-            });
+                    $pcmd['counterClockwise'] = $speed;
+                    unset($pcmd['clockwise']);
+                }
+            );
 
-            $udpControl->on('stop',
+            $udpControl->on(
+                'stop',
                 function () use (&$pcmd) {
-                $pcmd = [];
-            });
+                    $pcmd = [];
+                }
+            );
 
-            $udpControl->on('front',
+            $udpControl->on(
+                'front',
                 function ($speed = 0.3) use (&$pcmd) {
-                $pcmd['front'] = $speed;
-                unset($pcmd['back']);
-            });
+                    $pcmd['front'] = $speed;
+                    unset($pcmd['back']);
+                }
+            );
 
-            $udpControl->on('back',
+            $udpControl->on(
+                'back',
                 function ($speed = 0.3) use (&$pcmd) {
-                $pcmd['back'] = $speed;
-                unset($pcmd['front']);
-            });
+                    $pcmd['back'] = $speed;
+                    unset($pcmd['front']);
+                }
+            );
 
-            $udpControl->on('right',
+            $udpControl->on(
+                'right',
                 function ($speed = 0.3) use (&$pcmd) {
-                $pcmd['right'] = $speed;
-                unset($pcmd['left']);
-            });
+                    $pcmd['right'] = $speed;
+                    unset($pcmd['left']);
+                }
+            );
 
-            $udpControl->on('left',
+            $udpControl->on(
+                'left',
                 function ($speed = 0.3) use (&$pcmd) {
-                $pcmd['left'] = $speed;
-                unset($pcmd['right']);
-            });
+                    $pcmd['left'] = $speed;
+                    unset($pcmd['right']);
+                }
+            );
 
-            $udpControl->on('up',
+            $udpControl->on(
+                'up',
                 function ($speed = 0.6) use (&$pcmd) {
-                $pcmd['up'] = $speed;
-                unset($pcmd['down']);
-            });
+                    $pcmd['up'] = $speed;
+                    unset($pcmd['down']);
+                }
+            );
 
-            $udpControl->on('down',
+            $udpControl->on(
+                'down',
                 function ($speed = 0.6) use (&$pcmd) {
-                $pcmd['down'] = $speed;
-                unset($pcmd['up']);
-            });
+                    $pcmd['down'] = $speed;
+                    unset($pcmd['up']);
+                }
+            );
 
-            $udpControl->on('flip',
+            $udpControl->on(
+                'flip',
                 function () use (&$anim) {
-                $anim['control:flight_anim'] = '16,5';
-            });
+                    $anim['control:flight_anim'] = '16,5';
+                }
+            );
         });
     }
 }

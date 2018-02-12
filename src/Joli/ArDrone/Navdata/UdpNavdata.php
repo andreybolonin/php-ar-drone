@@ -24,6 +24,10 @@ class UdpNavdata extends EventEmitter
      */
     private $ip;
 
+    /**
+     * UdpNavdata constructor.
+     * @param $loop
+     */
     public function __construct($loop)
     {
         $this->port = Config::CONTROL_PORT;
@@ -44,11 +48,13 @@ class UdpNavdata extends EventEmitter
             $client->send('1');
             $client->send('1');
 
-            $client->on('message',
+            $client->on(
+                'message',
                 function ($message) use (&$udpNavdata) {
-                $frame = new Frame($message);
-                $udpNavdata->emit('navdata', [$frame]);
-            });
+                    $frame = new Frame($message);
+                    $udpNavdata->emit('navdata', [$frame]);
+                }
+            );
         });
     }
 }

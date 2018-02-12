@@ -26,6 +26,12 @@ class AtCommand
     const TYPE_FTRIM = 'FTRIM';
     const TYPE_ANIM = 'ANIM';
 
+    /**
+     * AtCommand constructor.
+     * @param $sequence
+     * @param $type
+     * @param $args
+     */
     public function __construct($sequence, $type, $args)
     {
         $this->args = $args;
@@ -33,6 +39,9 @@ class AtCommand
         $this->sequence = $sequence;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         $command = 'AT*'.$this->type.'='.$this->sequence;

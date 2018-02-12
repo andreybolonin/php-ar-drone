@@ -17,6 +17,10 @@ class Repl extends EventEmitter
      */
     public $prompt;
 
+    /**
+     * Repl constructor.
+     * @param $loop
+     */
     public function __construct($loop)
     {
         $this->loop = $loop;

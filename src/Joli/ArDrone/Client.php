@@ -52,6 +52,9 @@ class Client extends EventEmitter
      */
     private $loop;
 
+    /**
+     * Client constructor.
+     */
     public function __construct()
     {
         $this->loop = LoopFactory::create();
@@ -125,6 +128,11 @@ class Client extends EventEmitter
         });
     }
 
+    /**
+     * @param $e
+     * @param $state
+     * @param $currentState
+     */
     public function emitState($e, $state, $currentState)
     {
         if ($currentState === $state && $this->lastState !== $state) {
@@ -149,6 +157,11 @@ class Client extends EventEmitter
         });
     }
 
+    /**
+     * @param $duration
+     * @param $fn
+     * @return $this
+     */
     public function after($duration, $fn)
     {
         $this->loop->addTimer(($this->timerOffset + $duration), $fn);
@@ -178,12 +191,17 @@ class Client extends EventEmitter
         $this->loop->run();
     }
 
+    /**
+     * @param $name
+     * @param $arguments
+     */
     public function __call($name, $arguments)
     {
         if (in_array($name, Config::$commands)) {
             if ($name === 'takeoff' || $name === 'land') {
                 // process callback function
-                $callback = (count($arguments) === 1) ? $arguments[0] : function () {};
+                $callback = (count($arguments) === 1) ? $arguments[0] : function () {
+                };
                 $eventName = ($name === 'takeoff') ? 'hovering' : 'landed';
 
                 $this->once($eventName, $callback);

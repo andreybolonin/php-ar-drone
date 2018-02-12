@@ -14,12 +14,19 @@ class Buffer
      */
     private $offset;
 
+    /**
+     * Buffer constructor.
+     * @param $binary
+     */
     public function __construct($binary)
     {
         $this->data = $binary;
         $this->offset = 0;
     }
 
+    /**
+     * @return string
+     */
     public function getUint32LE()
     {
         $value = unpack('V/', substr($this->data, $this->offset, ($this->offset + 4)));
@@ -28,6 +35,9 @@ class Buffer
         return dechex($value[1]);
     }
 
+    /**
+     * @return string
+     */
     public function getUint16LE()
     {
         $value = unpack('v/', substr($this->data, $this->offset, ($this->offset + 2)));
@@ -36,6 +46,9 @@ class Buffer
         return dechex($value[1]);
     }
 
+    /**
+     * @return string
+     */
     public function getFloat32()
     {
         $value = unpack('f/', substr($this->data, $this->offset, ($this->offset + 4)));
@@ -44,6 +57,9 @@ class Buffer
         return dechex($value[1]);
     }
 
+    /**
+     * @return string
+     */
     public function getUint8()
     {
         $value = unpack('C/', substr($this->data, $this->offset, ($this->offset + 1)));
@@ -52,6 +68,9 @@ class Buffer
         return dechex($value[1]);
     }
 
+    /**
+     * @return string
+     */
     public function getInt32()
     {
         $value = unpack('I/', substr($this->data, $this->offset, ($this->offset + 4)));
@@ -60,11 +79,18 @@ class Buffer
         return dechex($value[1]);
     }
 
+    /**
+     * @param $masks
+     * @return array
+     */
     public function getMask32($masks)
     {
         return $this->mask($masks, $this->getUint32LE());
     }
 
+    /**
+     * @return array
+     */
     public function getVector31()
     {
         return [
@@ -74,6 +100,9 @@ class Buffer
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getMatrix33()
     {
         return [
@@ -89,6 +118,10 @@ class Buffer
         ];
     }
 
+    /**
+     * @param $nbBytes
+     * @return bool|string
+     */
     public function getBytes($nbBytes)
     {
         $value = substr($this->data, $this->offset, ($this->offset + $nbBytes));
@@ -97,12 +130,20 @@ class Buffer
         return $value;
     }
 
+    /**
+     * @param $step
+     */
     private function moveOffset($step)
     {
         $this->offset = $this->offset + $step;
     }
 
-    //todo: move this function ?
+    /**
+     * @todo move this function ?
+     * @param $masks
+     * @param $value
+     * @return array
+     */
     private function mask($masks, $value)
     {
         $flags = [];
@@ -115,13 +156,16 @@ class Buffer
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getData()
     {
         return $this->data;
     }
 
+    /**
+     * @return int
+     */
     public function getLength()
     {
         return strlen($this->data);

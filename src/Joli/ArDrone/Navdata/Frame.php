@@ -3,6 +3,7 @@
 namespace Joli\ArDrone\Navdata;
 
 use Joli\ArDrone\Buffer\Buffer;
+
 class Frame
 {
     /**
@@ -40,6 +41,11 @@ class Frame
      */
     private $droneStateMasks;
 
+    /**
+     * Frame constructor.
+     * @param $binaryFrame
+     * @throws \Exception
+     */
     public function __construct($binaryFrame)
     {
         // from ARDrone_SDK_2_0/ARDroneLib/Soft/Common/config.h
@@ -104,6 +110,9 @@ class Frame
         $this->visionFlag = $this->buffer->getUint32LE();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function getFrameOptions()
     {
         $isChecksum = false;
@@ -136,26 +145,41 @@ class Frame
         }
     }
 
+    /**
+     * @return bool
+     */
     private function checkHeaderIntegrity()
     {
         return $this->header === '55667788' || $this->header === '55667789';
     }
 
+    /**
+     * @return int|string
+     */
     public function getHeader()
     {
         return $this->header;
     }
 
+    /**
+     * @return int
+     */
     public function getDroneState()
     {
         return $this->droneState;
     }
 
+    /**
+     * @return int
+     */
     public function getSequenceNumber()
     {
         return $this->sequenceNumber;
     }
 
+    /**
+     * @return int
+     */
     public function getVisionFlag()
     {
         return $this->visionFlag;
@@ -169,6 +193,9 @@ class Frame
         return $this->options;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         $toString = '';

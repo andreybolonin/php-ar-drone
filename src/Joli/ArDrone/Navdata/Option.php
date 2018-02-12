@@ -63,6 +63,9 @@ class Option
         65535 => 'checksum',
     ];
 
+    /**
+     * @var array
+     */
     public static $controlState = [
         0 => 'CTRL_DEFAULT',
         1 => 'CTRL_INIT',
@@ -76,6 +79,9 @@ class Option
         9 => 'CTRL_TRANS_LOOPING',
     ];
 
+    /**
+     * @var array
+     */
     public static $flyState = [
         0 => 'FLYING_OK',
         1 => 'FLYING_LOST_ALT',
@@ -86,6 +92,11 @@ class Option
         6 => 'FLYING_NO_VISION',
     ];
 
+    /**
+     * Option constructor.
+     * @param $idOption
+     * @param Buffer $buffer
+     */
     public function __construct($idOption, Buffer $buffer)
     {
         $this->buffer = $buffer;
@@ -114,6 +125,9 @@ class Option
         }
     }
 
+    /**
+     * @return array
+     */
     private function getDemoOptionData()
     {
         $flyState = self::$flyState[$this->buffer->getUint16LE()];
@@ -180,6 +194,9 @@ class Option
         return $data;
     }
 
+    /**
+     * @return array
+     */
     private function getVisionDetectData()
     {
         return [
@@ -197,6 +214,9 @@ class Option
         ];
     }
 
+    /**
+     * @return array
+     */
     private function getPwmData()
     {
         return [
@@ -220,6 +240,9 @@ class Option
         ];
     }
 
+    /**
+     * @return array
+     */
     private function getPhysMeasuresData()
     {
         return [
@@ -235,6 +258,10 @@ class Option
         ];
     }
 
+    /**
+     * @param $n
+     * @param $type
+     */
     private function timesMap($n, $type)
     {
         $data = [];
@@ -260,6 +287,9 @@ class Option
         }
     }
 
+    /**
+     * @return mixed
+     */
     public function getOptionName()
     {
         return self::$optionIds[$this->idOption];
@@ -282,7 +312,7 @@ class Option
     }
 
     /**
-     * @return mixed
+     * @return mixed|string
      */
     public function getName()
     {

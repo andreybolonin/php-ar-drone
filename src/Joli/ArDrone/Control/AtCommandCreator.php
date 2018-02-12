@@ -23,11 +23,19 @@ class AtCommandCreator
         'counterClockwise' => ['index' => 4, 'invert' => true],
     ];
 
+    /**
+     * AtCommandCreator constructor.
+     */
     public function __construct()
     {
         $this->sequence = 0;
     }
 
+    /**
+     * @param $name
+     * @param $value
+     * @return AtCommand
+     */
     public function createConfigCommand($name, $value)
     {
         $args = [];
@@ -39,6 +47,10 @@ class AtCommandCreator
         return new AtCommand($this->sequence, AtCommand::TYPE_CONFIG, $args);
     }
 
+    /**
+     * @param $options
+     * @return AtCommand
+     */
     public function createRefCommand($options)
     {
         $config = 0;
@@ -59,6 +71,10 @@ class AtCommandCreator
         return new AtCommand($this->sequence, AtCommand::TYPE_REF, $args);
     }
 
+    /**
+     * @param $options
+     * @return AtCommand
+     */
     public function createPcmdCommand($options)
     {
         $args = [0, 0, 0, 0, 0];
@@ -82,11 +98,17 @@ class AtCommandCreator
         return new AtCommand($this->sequence, AtCommand::TYPE_PCMD, $args);
     }
 
+    /**
+     * @return AtCommand
+     */
     public function createFtrimCommand()
     {
         return new AtCommand($this->sequence, AtCommand::TYPE_FTRIM, []);
     }
 
+    /**
+     * @return AtCommand
+     */
     public function createAnimCommand()
     {
         $args = [17, 1];
@@ -94,6 +116,10 @@ class AtCommandCreator
         return new AtCommand($this->sequence, AtCommand::TYPE_ANIM, $args);
     }
 
+    /**
+     * @param $floatInt
+     * @return float|int
+     */
     private function floatToIEEE($floatInt)
     {
         $floatInt = (float) $floatInt;
